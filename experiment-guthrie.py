@@ -4,20 +4,24 @@
 # -----------------------------------------------------------------------------
 import random
 import numpy as np
-import matplotlib.pyplot as plt
 from tqdm import tqdm
+import matplotlib.pyplot as plt
+from multiprocessing import Pool
 from task import Task
 from model import Model
 
-seed      = random.randint(0,1000)
-np.random.seed(seed), random.seed(seed)
 
+seed = random.randint(0,1000)
+np.random.seed(seed), random.seed(seed)
 model     = Model("model-guthrie.json")
 task      = Task("task-guthrie.json")
 filename  = "experiment-guthrie.npy"
 n_session = 250
 n_trial   = len(task)
+records   = np.zeros((n_session, n_trial), dtype=task.records.dtype)
+total     = records.size
 
+# -----------------------------------------------------------------------------
 print("-"*30)
 print("Seed:     %d" % seed)
 print("Model:    %s" % model.filename)
@@ -25,25 +29,30 @@ print("Task:     %s" % task.filename)
 print("Sessions: %d (%d trials)" % (n_session, n_session*n_trial))
 print("-"*30)
 
-records = np.zeros((n_session, n_trial), dtype=task.records.dtype)
-total   = records.size
+def session(*args):
+    model.setup()
+    for trial in task:
+        model.process(task, trial)
+    return task.records
 
 if 0:
-    with tqdm(total=total, leave=True, desc="Control", unit="trial") as bar:
-        for index in range(n_session):
-            model.setup()
-            for trial in task:
-                bar.update(1)
-                model.process(task, trial)
-            records[index] = task.records
+    index = 0
+    records = np.zeros((n_session, n_trial), dtype=task.records.dtype)
+    pool = Pool(4)
+    for result in tqdm(pool.imap_unordered(session, [1,]*n_session),
+                       total=n_session, leave=True, desc="Progress", unit="session",):
+        records[index] = result
+        index += 1
+    pool.close()                       
     np.save(filename, records)
 else:
     import os.path, time
     print("Loading previous results")
     print("('%s', last modified on %s)" % (filename,time.ctime(os.path.getmtime(filename))))
     records = np.load(filename)
-  
+
 print("-"*30)
+# -----------------------------------------------------------------------------
 
 
 P_mean = np.mean(records["best"], axis=0)
