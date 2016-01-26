@@ -27,11 +27,11 @@
         "LTP" : 0.00025
     },
             
-    "CTX"   : { "tau" : 0.01, "rest" :  -3.0, "noise" : 0.01 },
-    "STR"   : { "tau" : 0.01, "rest" :   0.0, "noise" : 0.01 },
-    "STN"   : { "tau" : 0.01, "rest" : -10.0, "noise" : 0.01 },
-    "GPi"   : { "tau" : 0.01, "rest" :  10.0, "noise" : 0.01 },
-    "THL"   : { "tau" : 0.01, "rest" : -40.0, "noise" : 0.01 },
+    "CTX"   : { "tau" : 0.01, "rest" :  -3.0, "noise" : 0.010 },
+    "STR"   : { "tau" : 0.01, "rest" :   0.0, "noise" : 0.001 },
+    "STN"   : { "tau" : 0.01, "rest" : -10.0, "noise" : 0.001 },
+    "GPi"   : { "tau" : 0.01, "rest" :  10.0, "noise" : 0.030 },
+    "THL"   : { "tau" : 0.01, "rest" : -40.0, "noise" : 0.001 },
 
     "gain" :  {
         "CTX:cog → STR:cog" :  1.0,

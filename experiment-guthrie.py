@@ -2,65 +2,33 @@
 # Copyright (c) 2016, Nicolas P. Rougier
 # Distributed under the (new) BSD License.
 # -----------------------------------------------------------------------------
-import random
 import numpy as np
-from tqdm import tqdm
 import matplotlib.pyplot as plt
-from multiprocessing import Pool
-from task import Task
-from model import Model
+from experiment import Experiment
 
+def session(exp):
+    exp.model.setup()
+    for trial in exp.task:
+        exp.model.process(exp.task, trial)
+    return exp.task.records
 
-seed = random.randint(0,1000)
-np.random.seed(seed), random.seed(seed)
-model     = Model("model-guthrie.json")
-task      = Task("task-guthrie.json")
-filename  = "experiment-guthrie.npy"
-n_session = 250
-n_trial   = len(task)
-records   = np.zeros((n_session, n_trial), dtype=task.records.dtype)
-total     = records.size
+experiment = Experiment(model = "model-guthrie.json",
+                        task = "task-guthrie.json",
+                        result = "experiment-guthrie.npy",
+                        report = "experiment-guthrie.txt",
+                        n_session = 250, n_block = 1, seed = None)
+records = experiment.run(session, "Protocol 1")
+records = np.squeeze(records)
 
 # -----------------------------------------------------------------------------
-print("-"*30)
-print("Seed:     %d" % seed)
-print("Model:    %s" % model.filename)
-print("Task:     %s" % task.filename)
-print("Sessions: %d (%d trials)" % (n_session, n_session*n_trial))
-print("-"*30)
-
-def session(*args):
-    model.setup()
-    for trial in task:
-        model.process(task, trial)
-    return task.records
-
-if 0:
-    index = 0
-    records = np.zeros((n_session, n_trial), dtype=task.records.dtype)
-    pool = Pool(4)
-    for result in tqdm(pool.imap_unordered(session, [1,]*n_session),
-                       total=n_session, leave=True, desc="Progress", unit="session",):
-        records[index] = result
-        index += 1
-    pool.close()                       
-    np.save(filename, records)
-else:
-    import os.path, time
-    print("Loading previous results")
-    print("('%s', last modified on %s)" % (filename,time.ctime(os.path.getmtime(filename))))
-    records = np.load(filename)
-
-print("-"*30)
-# -----------------------------------------------------------------------------
-
-
 P_mean = np.mean(records["best"], axis=0)
 P_std = np.std(records["best"], axis=0)
 RT_mean = np.mean(records["RT"]*1000, axis=0)
 RT_std = np.std(records["RT"]*1000, axis=0)
 
+
 plt.figure(figsize=(16,10), facecolor="w")
+n_trial = len(experiment.task)
 
 ax = plt.subplot(211)
 ax.patch.set_facecolor("w")

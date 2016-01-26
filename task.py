@@ -59,7 +59,7 @@ class Task(object):
         # Get total number of trials
         n = 0
         for session in self.parameters.values():
-            n += session["n"]
+            n += session["n_trial"]
 
         # Build corresponding arrays
         self.trials = np.zeros(n, [("mot", float, 4),
@@ -79,7 +79,7 @@ class Task(object):
         # Build actual trials
         index = 0
         for session in self.parameters.values():
-            n = session["n"]
+            n = session["n_trial"]
             cue = session["cue"]
             P_cue = np.cumsum(cue) / np.sum(cue)
             pos = session["pos"]

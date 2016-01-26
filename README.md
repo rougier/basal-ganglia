@@ -2,14 +2,14 @@
 
 This is a reference implementation for the following models:
 
-  M. Guthrie, A Leblois, A. Garenne, T. Boraud, "Interaction between cognitive
+* M. Guthrie, A Leblois, A. Garenne, T. Boraud, "Interaction between cognitive
   and motor cortico-basal ganglia loops during decision making: a computational
   study", Journal of Neurophysiology, 2013.
 
-  C. Piron, D. Kase, M. Topalidou, M. Goillandeau, H. Orignac, T. N'Guyen,
+* C. Piron, D. Kase, M. Topalidou, M. Goillandeau, H. Orignac, T. N'Guyen,
   N.P. Rougier, T. Boraud, "The Globus Pallidus Pars Interna in Goal-Oriented
   and Routine Behaviors: Resolving a Long-Standing Paradox", Movement
-  Disorderds, 2016.
+  Disorders, 2016.
 
 
 ## Installation
