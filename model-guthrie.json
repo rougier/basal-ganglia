@@ -1,0 +1,64 @@
+{
+    "sigmoid" : { "Vmin" : 0.0, "Vmax" : 20.0, "Vh" : 16.0, "Vc" : 3.0 },
+    "clamp"   : { "Vmin" : 0.0, "Vmax" : 1000.0 },
+    "weight"  : { "min" : 0.25, "max" : 0.75, "noise" : 0.005 },
+
+    "threshold" : 40.0,
+            
+    "time" : {
+        "dt" : 0.001,
+        "settling" : 0.5,
+        "duration" : 2.5
+    },
+            
+    "input" : {
+        "potential" : 7.0,
+        "noise"     : 0.01
+    },
+
+    "RL" : {
+        "init"  : 0.5,
+        "alpha" : 0.025,
+        "LTP"   : 0.004,
+        "LTD"   : 0.003
+    },
+
+    "Hebbian" : {
+        "LTP" : 0.004,
+        "LTD" : 0.002
+    },
+            
+    "CTX"   : { "tau" : 0.01, "rest" :  -3.0, "noise" : 0.010 },
+    "STR"   : { "tau" : 0.01, "rest" :   0.0, "noise" : 0.001 },
+    "STN"   : { "tau" : 0.01, "rest" : -10.0, "noise" : 0.001 },
+    "GPi"   : { "tau" : 0.01, "rest" :  10.0, "noise" : 0.030 },
+    "THL"   : { "tau" : 0.01, "rest" : -40.0, "noise" : 0.001 },
+
+    "gain" :  {
+        "CTX:cog → STR:cog" :  1.0,
+        "CTX:cog → STR:ass" :  0.2,
+        "CTX:cog → STN:cog" :  1.0,
+        "CTX:cog → THL:cog" :  0.4,
+            
+        "CTX:mot → STR:mot" :  1.0,
+        "CTX:mot → STR:ass" :  0.2,
+        "CTX:mot → STN:mot" :  1.0,
+        "CTX:mot → THL:mot" :  0.4,
+            
+        "CTX:ass → STR:ass" :  1.0,
+                
+        "STR:cog → GPi:cog" : -2.0,
+        "STR:mot → GPi:mot" : -2.0,
+        "STR:ass → GPi:cog" : -2.0,
+        "STR:ass → GPi:mot" : -2.0,
+                
+        "STN:cog → GPi:cog" :  1.0,
+        "STN:mot → GPi:mot" :  1.0,
+            
+        "GPi:cog → THL:cog" : -0.5,
+        "GPi:mot → THL:mot" : -0.5,
+            
+        "THL:cog → CTX:cog" :  1.0,
+        "THL:mot → CTX:mot" :  1.0
+    }
+}
