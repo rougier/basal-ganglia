@@ -30,7 +30,7 @@ experiment = Experiment(model = "model-topalidou.json",
                         task = "task-topalidou.json",
                         result = "experiment-topalidou-protocol-1.npy",
                         report = "experiment-topalidou-protocol-1.txt",
-                        n_session = 100, n_block = 2, seed = None)
+                        n_session = 20, n_block = 2, seed = None)
 records = experiment.run(session, "Protocol 1")
 
 

@@ -27,7 +27,7 @@ experiment = Experiment(model  = "model-topalidou.json",
                         task   = "task-topalidou.json",
                         result = "experiment-topalidou-control.npy",
                         report = "experiment-topalidou-control.txt",
-                        n_session = 100, n_block = 2, seed = None)
+                        n_session = 20, n_block = 2, seed = None)
 records = experiment.run(session, "Control")
 
 
