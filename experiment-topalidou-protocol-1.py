@@ -28,8 +28,8 @@ def session(exp):
 
 experiment = Experiment(model = "model-topalidou.json",
                         task = "task-topalidou.json",
-                        result = "data/experiment-topalidou-protocol-1-test.npy",
-                        report = "data/experiment-topalidou-protocol-1-test.txt",
+                        result = "data/experiment-topalidou-protocol-1.npy",
+                        report = "data/experiment-topalidou-protocol-1.txt",
                         n_session = 25, n_block = 2, seed = None)
 records = experiment.run(session, "Protocol 1")
 
