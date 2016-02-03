@@ -57,7 +57,7 @@ class Task(object):
     def setup(self):
 
         _ = self.parameters
-        session = _["session"]
+
         blocks = []
         for name in _["session"]:
             blocks.append(_[name])
@@ -85,8 +85,6 @@ class Task(object):
         # Build actual trials
         index = 0
         for block in blocks:
-            block = _[name]
-            # for session in self.parameters.values():
             n = block["n_trial"]
             cue = np.array(block["cue"],float)
             P_cue = np.cumsum(cue) / np.sum(cue)
