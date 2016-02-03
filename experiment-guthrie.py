@@ -14,8 +14,8 @@ def session(exp):
 
 experiment = Experiment(model = "model-guthrie.json",
                         task = "task-guthrie.json",
-                        result = "experiment-guthrie.npy",
-                        report = "experiment-guthrie.txt",
+                        result = "data/experiment-guthrie.npy",
+                        report = "data/experiment-guthrie.txt",
                         n_session = 250, n_block = 1, seed = None)
 records = experiment.run(session, "Protocol 1")
 records = np.squeeze(records)
@@ -80,6 +80,6 @@ plt.text(n_trial+1, RT_mean[-1], "%d ms" % RT_mean[-1],
 plt.text(0, RT_mean[0], "%d" % RT_mean[0],
          ha="right", va="center", color="r")
 
-plt.savefig("experiment-guthrie.pdf")
+plt.savefig("data/experiment-guthrie.pdf")
 plt.show()
 

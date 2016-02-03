@@ -56,5 +56,5 @@ plt.ylim(-10.0,60.0)
 plt.xticks([0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0],
            ['0.0','0.5\n(Trial start)','1.0','1.5', '2.0','2.5','3.0'])
 
-plt.savefig("single-trial-GPi-ON.pdf")
+plt.savefig("data/single-trial-GPi-ON.pdf")
 plt.show()

@@ -20,6 +20,7 @@ It requires python, numpy, cython and matplotlib:
 $ pip install numpy
 $ pip install cython
 $ pip install matplotlib
+$ pip install tqdm
 ```
 
 To compile the model, just type:

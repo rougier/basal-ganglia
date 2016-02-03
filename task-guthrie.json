@@ -1,5 +1,6 @@
 {
-    "session" : {
+    "session" : ["block 1"],
+    "block 1" : {
         "n_trial" : 180,
         "cue"     : [ 1, 1, 1, 1 ],
         "pos"     : [ 1, 1, 1, 1 ],

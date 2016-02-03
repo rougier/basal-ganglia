@@ -1,8 +1,8 @@
-# Generated PDF files
-*.pdf
+# Generated data
+data
 
-# Data files
-*.npy
+# Emacs backup file
+*~
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

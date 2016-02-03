@@ -56,10 +56,16 @@ class Task(object):
         
     def setup(self):
 
+        _ = self.parameters
+        session = _["session"]
+        blocks = []
+        for name in _["session"]:
+            blocks.append(_[name])
+        
         # Get total number of trials
         n = 0
-        for session in self.parameters.values():
-            n += session["n_trial"]
+        for block in blocks:
+            n += block["n_trial"]
 
         # Build corresponding arrays
         self.trials = np.zeros(n, [("mot", float, 4),
@@ -78,13 +84,15 @@ class Task(object):
         
         # Build actual trials
         index = 0
-        for session in self.parameters.values():
-            n = session["n_trial"]
-            cue = session["cue"]
+        for block in blocks:
+            block = _[name]
+            # for session in self.parameters.values():
+            n = block["n_trial"]
+            cue = np.array(block["cue"],float)
             P_cue = np.cumsum(cue) / np.sum(cue)
-            pos = session["pos"]
+            pos = block["pos"]
             P_pos = np.cumsum(pos) / np.sum(pos)
-            rwd = session["rwd"]
+            rwd = block["rwd"]
 
             for i in range(n):
                 c1 = c2 =  np.searchsorted(P_cue, random.uniform(0,1))
