@@ -28,21 +28,21 @@ def session(exp):
 
 experiment = Experiment(model = "model-topalidou.json",
                         task = "task-topalidou.json",
-                        result = "data/experiment-topalidou-protocol-1.npy",
-                        report = "data/experiment-topalidou-protocol-1.txt",
+                        result = "data/experiment-topalidou-protocol-1-test.npy",
+                        report = "data/experiment-topalidou-protocol-1-test.txt",
                         n_session = 25, n_block = 2, seed = None)
 records = experiment.run(session, "Protocol 1")
 
 # Save performance (one column per session)
 # -----------------------------------------------------------------------------
-P = np.squeeze(records["best"][:,0])
-np.savetxt("data/experiment-topalidou-protocol-1-D1-P.csv", P.T, fmt="%d", delimiter=",")
-P = np.squeeze(records["best"][:,1])
-np.savetxt("data/experiment-topalidou-protocol-1-D2-P.csv", P.T, fmt="%d", delimiter=",")
-P = np.squeeze(records["RT"][:,0])
-np.savetxt("data/experiment-topalidou-protocol-1-D1-RT.csv", P.T, fmt="%.4f", delimiter=",")
-P = np.squeeze(records["RT"][:,1])
-np.savetxt("data/experiment-topalidou-protocol-1-D2-RT.csv", P.T, fmt="%.4f", delimiter=",")
+# P = np.squeeze(records["best"][:,0])
+# np.savetxt("data/experiment-topalidou-protocol-1-D1-P.csv", P.T, fmt="%d", delimiter=",")
+# P = np.squeeze(records["best"][:,1])
+# np.savetxt("data/experiment-topalidou-protocol-1-D2-P.csv", P.T, fmt="%d", delimiter=",")
+# P = np.squeeze(records["RT"][:,0])
+# np.savetxt("data/experiment-topalidou-protocol-1-D1-RT.csv", P.T, fmt="%.4f", delimiter=",")
+# P = np.squeeze(records["RT"][:,1])
+# np.savetxt("data/experiment-topalidou-protocol-1-D2-RT.csv", P.T, fmt="%.4f", delimiter=",")
 
 # Textual results
 # -----------------------------------------------------------------------------
@@ -73,8 +73,8 @@ print("-"*30)
 # Graphical results
 # -----------------------------------------------------------------------------
 from figures import *
-figure_H_P(records, [1,0], "Protocol 1", "data/experiment-topalidou-protocol-1-H-P.pdf")
-figure_H_RT(records, [1,0], "Protocol 1", "data/experiment-topalidou-protocol-1-H-RT.pdf")
+#figure_H_P(records, [1,0], "Protocol 1", "data/experiment-topalidou-protocol-1-H-P.pdf")
+#figure_H_RT(records, [1,0], "Protocol 1", "data/experiment-topalidou-protocol-1-H-RT.pdf")
 # figure_P(records, [1,0], "Protocol 1", "data/experiment-topalidou-protocol-1-P.pdf")
 # figure_RT(records, [1,0], "Protocol 1", "data/experiment-topalidou-protocol-1-RT.pdf")
 

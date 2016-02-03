@@ -320,8 +320,8 @@ cdef class AllToAll(Connection):
         cdef int s_size = self._source.shape[0]
         cdef int t_size = self._target.shape[0]
         
-        for i in range(s_size):
+        for i in range(t_size):
             v = 0
-            for j in range(t_size):
-                v += self._source[j] * self._weights[i+j*s_size]
+            for j in range(s_size):
+                v += self._source[j] * self._weights[i+j*t_size]
             self._target[i] += v * self._gain
