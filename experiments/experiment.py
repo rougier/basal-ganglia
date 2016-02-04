@@ -36,14 +36,14 @@ class Experiment(object):
         self.n_trial = len(self.task)
             
 
-    def run(self, session, desc=""):
+    def run(self, session, desc="", save=True, force=False, parse=True):
 
         # Command line argument parsing for the --force switch
-        parser = argparse.ArgumentParser()
-        parser.add_argument("--force", action='store_true')
-        args = parser.parse_args()
-        force =  args.force
-
+        if parse:
+            parser = argparse.ArgumentParser()
+            parser.add_argument("--force", action='store_true')
+            args = parser.parse_args()
+            force = args.force
 
         if os.path.exists(self.result_file) and not force:
             print("Reading report (%s)" % self.report_file)
@@ -69,11 +69,12 @@ class Experiment(object):
                 records[index] = result
                 index += 1
             pool.close()
-            
-            print("Saving results (%s)" % self.result_file)
-            np.save(self.result_file, records)
-            print("Writing report (%s)" % self.report_file)
-            self.write_report()
+
+            if save:
+                print("Saving results (%s)" % self.result_file)
+                np.save(self.result_file, records)
+                print("Writing report (%s)" % self.report_file)
+                self.write_report()
         else:
             print("Loading previous results")
             print(' → "%s"' % (self.result_file))
