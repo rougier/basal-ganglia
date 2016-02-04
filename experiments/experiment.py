@@ -58,7 +58,7 @@ class Experiment(object):
         n = self.n_session * self.n_block * self.n_trial
         print("Sessions: %d (%d trials)" % (self.n_session, n))
         print("-"*30)
-
+                
         if not os.path.exists(self.result_file) or force:
             index = 0
             records = np.zeros((self.n_session, self.n_block, self.n_trial),
@@ -75,12 +75,13 @@ class Experiment(object):
                 np.save(self.result_file, records)
                 print("Writing report (%s)" % self.report_file)
                 self.write_report()
+                print("-"*30)
         else:
             print("Loading previous results")
             print(' → "%s"' % (self.result_file))
             records = np.load(self.result_file)
+            print("-"*30)
 
-        print("-"*30)
         return records
 
         

@@ -12,12 +12,17 @@ def session(exp):
     return exp.task.records
 
 def test_model():
-    experiment = Experiment(model = "experiments/model-guthrie.json",
-                            task = "experiments/task-guthrie.json",
+    experiment = Experiment(model  = "experiments/model-guthrie.json",
+                            task   = "experiments/task-guthrie.json",
                             result = "test-experiment-guthrie.npy",
                             report = "test-experiment-guthrie.txt",
-                            n_session = 10, n_block = 1, seed = 1)
+                            n_session = 25, n_block = 1, seed = 1)
     records = experiment.run(session, save=False, force=True, parse=False)
     records = np.squeeze(records)    
-    P_mean = np.mean(records["best"], axis=0)
-    assert P_mean[-1] > 0.9
+
+    mean = np.mean(records["best"], axis=0)[-1]
+    std  = np.std(records["best"], axis=0)[-1]
+    print("Mean performance: %.2f ± %.2f" % (mean, std))
+    print("-"*30)
+   
+    assert mean >= 0.9
