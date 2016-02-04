@@ -5,6 +5,9 @@ python:
 
 # command to install dependencies
 install:
+  - pip install tqdm
+  - pip install numpy
+  - pip install cython
   - pip install .
 
 # command to run tests
