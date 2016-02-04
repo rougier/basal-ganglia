@@ -48,10 +48,20 @@ class Task(object):
     """ A two-armed bandit task """
 
     def __init__(self, filename="task-guthrie.json"):
-        self.index = 0
+        self.index       = None
+        self.index_start = None
+        self.index_stop  = None
+
         self.filename = filename
         self.parameters = json.load(open(filename))
         self.setup()
+        
+
+    def block(self,index):
+        self.index_start = self.blocks[index][0]
+        self.index_stop  = self.blocks[index][1]
+        self.index = self.index_start
+        return self
 
         
     def setup(self):
@@ -64,7 +74,12 @@ class Task(object):
         
         # Get total number of trials
         n = 0
+        self.blocks = []
+        start,stop = 0, 0
         for block in blocks:
+            start = stop
+            stop += block["n_trial"]
+            self.blocks.append((start-1,stop))
             n += block["n_trial"]
 
         # Build corresponding arrays
@@ -108,16 +123,24 @@ class Task(object):
                 trial["ass"][c2,m2]   = 1
                 trial["rwd"][...]     = rwd
                 index += 1
-            
+
+                        
     def __iter__(self):
-        self.setup()
-        self.index = -1
+        if self.index_start is None:
+            self.setup()
+            self.index_start = -1
+            self.index_stop  = len(self)
+            self.index = self.index_start
         return self
 
     def __next__(self):
         self.index += 1
-        if self.index < len(self.trials):
+        if self.index < self.index_stop:
             return self.trials[self.index]
+        
+        self.index       = None
+        self.index_start = None
+        self.index_stop  = None
         raise StopIteration
 
     def __len__(self):
