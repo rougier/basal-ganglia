@@ -1,12 +1,10 @@
-[![Build Status](https://travis-ci.org/rougier/basal-ganglia.svg?branch=master)](https://travis-ci.org/rougier/basal-ganglia)
-
 ## Introduction
 
 This is a reference implementation for the following models:
 
 * M. Guthrie, A Leblois, A. Garenne, T. Boraud, "Interaction between cognitive
   and motor cortico-basal ganglia loops during decision making: a computational
-  study", Journal of Neurophysiology, 2013.
+  study", Journal of Neurophysiology, 2013. [![Build Status](https://travis-ci.org/rougier/basal-ganglia.svg?branch=guthrie_et_al_2013)](https://travis-ci.org/rougier/basal-ganglia)
 
 * C. Piron, D. Kase, M. Topalidou, M. Goillandeau, H. Orignac, T. N'Guyen,
   N.P. Rougier, T. Boraud, "The Globus Pallidus Pars Interna in Goal-Oriented
