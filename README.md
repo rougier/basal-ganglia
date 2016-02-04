@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/rougier/basal-ganglia.svg?branch=master)](https://travis-ci.org/rougier/basal-ganglia)
 
 ## Introduction
 
