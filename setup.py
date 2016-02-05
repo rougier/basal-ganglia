@@ -7,7 +7,7 @@ from Cython.Build import cythonize
 import numpy as np
 
 extensions = [
-    Extension('cdana/cdana', ['cdana/cdana.pyx'], include_dirs = [np.get_include()]),
+    Extension('cdana.cdana', ['cdana/cdana.pyx'], include_dirs = [np.get_include()]),
 ]
 setup(
     name="cdana",
