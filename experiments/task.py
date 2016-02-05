@@ -58,7 +58,7 @@ class Task(object):
         
 
     def block(self,index):
-        self.index_start = self.blocks[index][0]
+        self.index_start = self.blocks[index][0]-1
         self.index_stop  = self.blocks[index][1]
         self.index = self.index_start
         return self
@@ -79,7 +79,7 @@ class Task(object):
         for block in blocks:
             start = stop
             stop += block["n_trial"]
-            self.blocks.append((start-1,stop))
+            self.blocks.append((start,stop))
             n += block["n_trial"]
 
         # Build corresponding arrays
