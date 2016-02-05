@@ -9,7 +9,7 @@ This is a reference implementation for the following models:
 * C. Piron, D. Kase, M. Topalidou, M. Goillandeau, H. Orignac, T. N'Guyen,
   N.P. Rougier, T. Boraud, "The Globus Pallidus Pars Interna in Goal-Oriented
   and Routine Behaviors: Resolving a Long-Standing Paradox", Movement
-  Disorders, 2016.
+  Disorders, 2016.  [![Build Status](https://travis-ci.org/rougier/basal-ganglia.svg?branch=piron_et_al_2016)](https://travis-ci.org/rougier/basal-ganglia)
 
 
 ## Installation
