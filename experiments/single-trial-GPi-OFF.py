@@ -29,7 +29,6 @@ model.process(task, trial, stop=False, debug=False)
 cog = model["CTX"]["cog"].history[:3000]
 mot = model["CTX"]["mot"].history[:3000]
 
-
 fig = plt.figure(figsize=(12,5))
 plt.subplots_adjust(bottom=0.15)
 

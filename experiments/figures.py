@@ -200,22 +200,41 @@ def figure_P(records, GPi, title, filename, save=True, show=False):
     ax.xaxis.set_tick_params(direction="out")
               
     alpha = 0.1
-    X = np.arange(n_trial)
+
+    X = 10+np.arange(n_trial-10)
 
     for i in range(n_block):
         P = np.squeeze(records["best"][:,i,:])
         color = 'b'
         if not GPi[i]: color = 'r'
-        global_mean = np.zeros(n_trial)
-        local_mean = np.zeros(n_trial)
-        
+
+        running_mean = np.zeros((n_session, n_trial-10))
         for j in range(n_session):
-            for k in range(n_trial):
+            for k in range(10,n_trial):
                 imin, imax = max(k+1-sliding_window,0), k+1
-                global_mean[k] = P[:,imin:imax].mean()
-                local_mean[k] = P[j,imin:imax].mean()
-            plt.plot(X, local_mean, c=color, lw=1, alpha=alpha)
-        plt.plot(X, global_mean, c=color, lw=2)
+                running_mean[j,k-10] = P[j,imin:imax].mean()
+
+        M = np.mean(running_mean,axis=0)
+        S = np.std(running_mean,axis=0)
+        V = np.var(running_mean,axis=0)
+        M1, M2 = M+S, M-S
+                
+        plt.plot(X, M, c=color, lw=2)
+        plt.fill_between(X, M1, M2, color=color, alpha=0.10)
+        plt.plot(X, M1, c=color, lw=.5, alpha=.25)
+        plt.plot(X, M2, c=color, lw=.5, alpha=.25)
+
+        # global_mean = np.zeros(n_trial)
+        # local_mean = np.zeros(n_trial)
+        
+        # for j in range(n_session):
+        #     for k in range(n_trial):
+        #         imin, imax = max(k+1-sliding_window,0), k+1
+        #         global_mean[k] = P[:,imin:imax].mean()
+        #         local_mean[k] = P[j,imin:imax].mean()
+        #     plt.plot(X, local_mean, c=color, lw=1, alpha=alpha)
+        # plt.plot(X, global_mean, c=color, lw=2)
+        ax.axvspan(X[1]-11,X[1]-1, color='.975')
         X += n_trial
         
     plt.xticks([])
@@ -226,13 +245,14 @@ def figure_P(records, GPi, title, filename, save=True, show=False):
         ax.text((X[0]+X[1])/2, -0.075, text, ha="center", va="top")
         if i < n_block-1:
             ax.axvline(X[1]+1, linewidth=0.5, c='k', alpha=.75)
+            
         X += n_trial
 
     plt.ylabel("Instantaneous performance\n(sliding window of %d trials)"
                % sliding_window)
     plt.title("%s (model, N=%d)" % (title, n_session))
     plt.xlim(0, n_block*n_trial)
-    plt.ylim(0, 1.05)
+    plt.ylim(0, 1.1)
 
     if save:
         plt.savefig(filename)

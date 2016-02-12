@@ -72,8 +72,8 @@ print("-"*30)
 # Graphical results
 # -----------------------------------------------------------------------------
 from figures import *
-figure_H_P(records, [1,1], "Control", "data/experiment-topalidou-control-H-P.pdf")
-figure_H_RT(records, [1,1], "Control", "data/experiment-topalidou-control-H-RT.pdf")
-# figure_P(records, [1,1], "Control", "data/experiment-topalidou-control-P.pdf")
+# figure_H_P(records, [1,1], "Control", "data/experiment-topalidou-control-H-P.pdf")
+# figure_H_RT(records, [1,1], "Control", "data/experiment-topalidou-control-H-RT.pdf")
+figure_P(records, [1,1], "Control", "data/experiment-topalidou-control-P.pdf")
 # figure_RT(records, [1,1], "Control", "data/experiment-topalidou-control-RT.pdf")
 

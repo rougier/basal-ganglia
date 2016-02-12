@@ -75,6 +75,6 @@ print("-"*30)
 from figures import *
 #figure_H_P(records, [1,0], "Protocol 1", "data/experiment-topalidou-protocol-1-H-P.pdf")
 #figure_H_RT(records, [1,0], "Protocol 1", "data/experiment-topalidou-protocol-1-H-RT.pdf")
-# figure_P(records, [1,0], "Protocol 1", "data/experiment-topalidou-protocol-1-P.pdf")
+figure_P(records, [1,0], "Protocol 1", "data/experiment-topalidou-protocol-1-P.pdf")
 # figure_RT(records, [1,0], "Protocol 1", "data/experiment-topalidou-protocol-1-RT.pdf")
 

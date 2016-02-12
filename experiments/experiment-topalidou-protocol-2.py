@@ -99,13 +99,10 @@ print("-"*30)
 
 
 
-
-
-
 # Graphical results
 # -----------------------------------------------------------------------------
 from figures import *
-figure_H_P(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-H-P.pdf")
+# figure_H_P(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-H-P.pdf")
 # figure_H_RT(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-H-RT.pdf")
-# figure_P(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-P.pdf")
+figure_P(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-P.pdf")
 # figure_RT(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-RT.pdf")

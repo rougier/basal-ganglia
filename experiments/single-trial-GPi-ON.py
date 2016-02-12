@@ -23,7 +23,7 @@ print("-"*30)
 
 
 trial = task[0]
-model.process(task, trial, stop=False,debug=False)
+model.process(task, trial, stop=False, debug=False)
 
 cog = model["CTX"]["cog"].history[:3000]
 mot = model["CTX"]["mot"].history[:3000]
@@ -37,6 +37,9 @@ timesteps = np.linspace(0, duration, 3000)
 
 fig.patch.set_facecolor('.9')
 ax = plt.subplot(1,1,1)
+
+
+
 
 plt.plot(timesteps, cog[:,0], c='r', label="Cognitive Cortex")
 plt.plot(timesteps, cog[:,1], c='r')
