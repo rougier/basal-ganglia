@@ -73,11 +73,15 @@ class Task(object):
                                    ("ass", float, (4,4)),
                                    ("rwd", float, 4),
                                    ("rnd", float, 1) ] )
-        self.records  = np.zeros(n, [("choice", float, 1),
-                                     ("best",   float, 1),
-                                     ("valid",  float, 1),
-                                     ("RT",     float, 1),
-                                     ("reward", float, 1)] )
+        self.records  = np.zeros(n, [("choice",  float, 1),
+                                     ("best",    float, 1),
+                                     ("valid",   float, 1),
+                                     ("RT",      float, 1),
+                                     ("reward",  float, 1),
+                                     # These values must be collected from the model
+                                     ("value", float, 4),
+                                     ("CTX:cog -> CTX:ass", float, 4),
+                                     ("CTX:cog -> STR:cog", float, 4)] )
 
         # We draw all random probabilities at once (faster)
         self.trials["rnd"] = np.random.uniform(0,1,n)
@@ -127,7 +131,7 @@ class Task(object):
         return self.trials[index]
                  
         
-    def process(self, trial, choice, RT=0.0, debug=False):
+    def process(self, trial, choice, RT=0.0, model=None, debug=False):
         """
         Process a (motor) choice and return the reward and whether this was the
         best choice for this trial.
@@ -159,6 +163,10 @@ class Task(object):
         self.records[self.index]["valid"] = valid
         self.records[self.index]["choice"] = choice
         self.records[self.index]["reward"] = reward
+        if model is not None:
+            self.records[self.index]["value"] = model["value"]
+            self.records[self.index]["CTX:cog -> CTX:ass"] = model["CTX:cog → CTX:ass"].weights
+            self.records[self.index]["CTX:cog -> STR:cog"] = model["CTX:cog → STR:cog"].weights
 
         if debug:
             if best: s = " (+)"

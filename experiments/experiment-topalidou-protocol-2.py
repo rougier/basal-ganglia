@@ -15,21 +15,21 @@ def session(exp):
     exp.model["GPi:cog → THL:cog"].gain = 0
     exp.model["GPi:mot → THL:mot"].gain = 0
     for trial in exp.task:
-        exp.model.process(exp.task, trial)
+        exp.model.process(exp.task, trial, model = exp.model)
     records[0] = exp.task.records
 
     # Day 2: GPi ON
     exp.model["GPi:cog → THL:cog"].gain = g1
     exp.model["GPi:mot → THL:mot"].gain = g2
     for trial in exp.task:
-        exp.model.process(exp.task, trial)
+        exp.model.process(exp.task, trial, model = exp.model)
     records[1] = exp.task.records
 
     # Day 1 : GPi OFF
     exp.model["GPi:cog → THL:cog"].gain = 0
     exp.model["GPi:mot → THL:mot"].gain = 0
     for trial in exp.task:
-        exp.model.process(exp.task, trial)
+        exp.model.process(exp.task, trial, model = exp.model)
     records[2] = exp.task.records
         
     return records
@@ -37,9 +37,9 @@ def session(exp):
 
 experiment = Experiment(model = "model-topalidou.json",
                         task = "task-topalidou.json",
-                        result = "data/experiment-topalidou-protocol-2.npy",
-                        report = "data/experiment-topalidou-protocol-2.txt",
-                        n_session = 25, n_block = 3, seed = None)
+                        result = "data/experiment-topalidou-protocol-2-new.npy",
+                        report = "data/experiment-topalidou-protocol-2-new.txt",
+                        n_session = 25, n_block = 3, seed = 533)
 records = experiment.run(session, "Protocol 2")
 
 
@@ -104,5 +104,10 @@ print("-"*30)
 from figures import *
 # figure_H_P(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-H-P.pdf")
 # figure_H_RT(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-H-RT.pdf")
-figure_P(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-P.pdf")
+
+#figure_P(records, GPi=[0,1,0], save=False, show=True,
+#         title="Protocol 2", filename="data/experiment-topalidou-protocol-2-P.pdf")
+figure_V(records, GPi=[0,1,0], 
+         title="Protocol 2", filename="data/experiment-topalidou-protocol-2-V.pdf")
+
 # figure_RT(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-RT.pdf")

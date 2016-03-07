@@ -310,3 +310,66 @@ def figure_RT(records, GPi, title, filename, save=True, show=False):
     if show:
         plt.show()
 
+
+
+# -----------------------------------------------------------------------------
+def figure_V(records, GPi, title, filename, save=True, show=False):
+   
+    n_session = records.shape[0]
+    n_block   = records.shape[1]
+    n_trial   = records.shape[2]
+    figsize  = (5*n_block, 4)
+    
+    plt.figure(figsize=figsize, facecolor="w")
+    ax = plt.subplot(111)
+    ax.patch.set_facecolor("w")
+    ax.spines['right'].set_color('none')
+    ax.spines['top'].set_color('none')
+    ax.yaxis.set_ticks_position('left')
+    ax.yaxis.set_tick_params(direction="out")
+    ax.xaxis.set_ticks_position('bottom')
+    ax.xaxis.set_tick_params(direction="out")
+              
+    alpha = 0.05
+    X = np.arange(n_trial)
+    for i in range(n_block):
+        V = np.squeeze(records["value"][:,i,:])
+        
+        color = 'b'
+        if not GPi[i]: color = 'r'            
+
+        for j in [0,1]:
+            M = V[...,j].mean(axis=0)
+            S = V[...,j].std(axis=0)
+            plt.plot(X, M, color=color, lw=2)
+            plt.fill_between(X, M-S, M+S, color=color, alpha=0.10)
+            plt.plot(X, M-S, c=color, lw=.5, alpha=.25)
+            plt.plot(X, M+S, c=color, lw=.5, alpha=.25)
+
+            if i == n_block-1:
+#                plt.text(X[-1]+1, M[-1], "%.2f ± %.2f" % (M[-1],S[-1]),
+#                         ha="left", va="center", color="r")
+                print("V=%.2f ± %.2f" % (M[-1],S[-1]))
+        X += n_trial
+
+        
+    plt.xticks([])
+    X, Y = np.array([[1, n_trial-1], [-0.025, -0.025]])
+    for i in range(n_block):
+        ax.add_line(lines.Line2D(X, Y, lw=1, color='k', clip_on=False))
+        text = "Day %d, GPi %s, %d trials" % (i+1,["OFF","ON"][GPi[i]], n_trial)
+        ax.text((X[0]+X[1])/2, -0.075, text, ha="center", va="top")
+        if i < n_block-1:
+            ax.axvline(X[1]+1, linewidth=0.5, c='k', alpha=.75)
+        X += n_trial
+
+    plt.ylabel("Estimated internal value of stimuli", fontsize=14)
+    plt.title("%s (model, N=%d)" % (title, n_session))
+    plt.xlim(0, n_block*n_trial)
+    plt.ylim(0, 1.0)
+
+    if save:
+        plt.savefig(filename)
+        os.system("pdfcrop %s %s" % (filename, filename))
+    if show:
+        plt.show()

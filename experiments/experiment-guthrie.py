@@ -9,7 +9,7 @@ from experiment import Experiment
 def session(exp):
     exp.model.setup()
     for trial in exp.task:
-        exp.model.process(exp.task, trial)
+        exp.model.process(task=exp.task, trial=trial, model = exp.model)
     return exp.task.records
 
 experiment = Experiment(model = "model-guthrie.json",

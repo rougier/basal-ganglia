@@ -162,7 +162,7 @@ class Model(object):
             group.evaluate(dt)
 
 
-    def process(self, task, trial, stop=True, debug=False):
+    def process(self, task, trial, stop=True, debug=False, model=None):
 
         _ = self.parameters
 
@@ -201,11 +201,11 @@ class Model(object):
                         
         if decision is False:
             # print("  No decision")
-            reward, cue, best = task.process(trial, -1, RT, debug=debug)
+            reward, cue, best = task.process(trial, -1, RT, debug=debug, model=model)
         else:
             choice = np.argmax(self["CTX"]["mot"]["U"])
             # actual_cue = np.argmax(self["CTX"]["cog"]["U"])
-            reward, cue, best = task.process(trial, choice, RT, debug=debug)
+            reward, cue, best = task.process(trial, choice, RT, debug=debug, model=model)
             # print("  Motor decision: %d, Chosen cue: %d, Actual cue: %d" % (choice,cue, actual_cue))
                         
             # Constants
