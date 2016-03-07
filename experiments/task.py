@@ -48,12 +48,22 @@ class Task(object):
     """ A two-armed bandit task """
 
     def __init__(self, filename="task-guthrie.json"):
-        self.index = 0
+        self.index       = None
+        self.index_start = None
+        self.index_stop  = None
+
         self.filename = filename
         self.parameters = json.load(open(filename))
         self.setup()
 
-        
+
+    def block(self,index):
+        self.index_start = self.blocks[index][0]-1
+        self.index_stop  = self.blocks[index][1]
+        self.index = self.index_start
+        return self
+
+
     def setup(self):
 
         _ = self.parameters
@@ -61,10 +71,15 @@ class Task(object):
         blocks = []
         for name in _["session"]:
             blocks.append(_[name])
-        
+
         # Get total number of trials
         n = 0
+        self.blocks = []
+        start,stop = 0, 0
         for block in blocks:
+            start = stop
+            stop += block["n_trial"]
+            self.blocks.append((start,stop))
             n += block["n_trial"]
 
         # Build corresponding arrays
@@ -85,7 +100,7 @@ class Task(object):
 
         # We draw all random probabilities at once (faster)
         self.trials["rnd"] = np.random.uniform(0,1,n)
-        
+
         # Build actual trials
         index = 0
         for block in blocks:
@@ -112,16 +127,23 @@ class Task(object):
                 trial["ass"][c2,m2]   = 1
                 trial["rwd"][...]     = rwd
                 index += 1
-            
+
     def __iter__(self):
-        self.setup()
-        self.index = -1
+        if self.index_start is None:
+            self.setup()
+            self.index_start = -1
+            self.index_stop  = len(self)
+            self.index = self.index_start
         return self
 
     def __next__(self):
         self.index += 1
-        if self.index < len(self.trials):
+        if self.index < self.index_stop:
             return self.trials[self.index]
+
+        self.index       = None
+        self.index_start = None
+        self.index_stop  = None
         raise StopIteration
 
     def __len__(self):
@@ -129,8 +151,8 @@ class Task(object):
 
     def __getitem__(self, index):
         return self.trials[index]
-                 
-        
+
+
     def process(self, trial, choice, RT=0.0, model=None, debug=False):
         """
         Process a (motor) choice and return the reward and whether this was the
@@ -176,7 +198,7 @@ class Task(object):
             print("  Mean performance: %.3f" % np.array(P).mean())
             R = self.records[:self.index+1]["reward"]
             print("  Mean reward:      %.3f" % np.array(R).mean())
-        
+
         return reward, cue, best
 
 
