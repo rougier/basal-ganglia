@@ -53,6 +53,10 @@ class Task(object):
         self.filename = filename
         with open(os.path.join(os.path.dirname(__file__), filename)) as f:
             self.parameters = json.load(f)
+        # create data/ directory if it does not exists.
+        self.datadir = os.path.join(os.path.dirname(__file__), 'data')
+        if not os.path.exists(self.datadir):
+            os.makedirs(self.datadir)
         self.setup()
 
 
