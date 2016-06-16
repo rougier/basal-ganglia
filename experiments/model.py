@@ -2,6 +2,7 @@
 # Copyright (c) 2016, Nicolas P. Rougier
 # Distributed under the (new) BSD License.
 # -----------------------------------------------------------------------------
+import os
 import json
 import numpy as np
 from cdana import *
@@ -10,27 +11,28 @@ class Model(object):
 
     def __init__(self, filename="default-model.json"):
         self.filename = filename
-        self.parameters = json.load(open(filename))
+        with open(os.path.join(os.path.dirname(__file__), filename)) as f:
+            self.parameters = json.load(f)
         self.setup()
 
-        
+
     def setup(self):
         _ = self.parameters
-        
+
         clamp = Clamp(min=_["clamp"]["Vmin"],
                       max=_["clamp"]["Vmax"])
         sigmoid = Sigmoid(Vmin = _["sigmoid"]["Vmin"],
                           Vmax = _["sigmoid"]["Vmax"],
                           Vh   = _["sigmoid"]["Vh"],
                           Vc   = _["sigmoid"]["Vc"])
-        
+
         def weights(shape):
             Wmin = _["weight"]["min"]
             Wmax = _["weight"]["max"]
             noise= _["weight"]["noise"]
             W = Wmin + np.random.normal( (Wmax-Wmin)/2, noise, shape)
             return np.minimum(np.maximum(W, Wmin), Wmax)
-        
+
 
         self._structures = {
             "CTX" : { "cog" : Group(4, activation = clamp),
@@ -52,7 +54,7 @@ class Model(object):
                 group.rest = _[name]["rest"]
                 group.noise = _[name]["noise"]
         self._structures["value"] = np.zeros(4)
-        
+
         CTX = self["CTX"]
         STR = self["STR"]
         STN = self["STN"]
@@ -60,7 +62,7 @@ class Model(object):
         THL = self["THL"]
         self["value"][...] = _["RL"]["init"]
 
-        self._groups = (CTX["cog"], CTX["mot"], CTX["ass"], 
+        self._groups = (CTX["cog"], CTX["mot"], CTX["ass"],
                         STR["cog"], STR["mot"], STR["ass"],
                         STN["cog"], STN["mot"],
                         GPi["cog"], GPi["mot"],
@@ -78,7 +80,7 @@ class Model(object):
                 OneToOne(CTX["cog"]["V"], STN["cog"]["Isyn"], np.ones(4), 0.0),
             "CTX:cog → THL:cog" :
                 OneToOne(CTX["cog"]["V"], THL["cog"]["Isyn"], np.ones(4), 0.0),
-            
+
             "CTX:mot → STR:mot" :
                 OneToOne(CTX["mot"]["V"], STR["mot"]["Isyn"], weights(4), 0.0),
             "CTX:mot → STR:ass" :
@@ -87,10 +89,10 @@ class Model(object):
                 OneToOne(CTX["mot"]["V"], STN["mot"]["Isyn"], np.ones(4), 0.0),
             "CTX:mot → THL:mot" :
                 OneToOne(CTX["mot"]["V"], THL["mot"]["Isyn"], np.ones(4), 0.0),
-            
+
             "CTX:ass → STR:ass" :
                 OneToOne(CTX["ass"]["V"], STR["ass"]["Isyn"], weights(16), 0.0),
-            
+
             "STR:cog → GPi:cog" :
                 OneToOne(STR["cog"]["V"], GPi["cog"]["Isyn"], np.ones(4), 0.0),
             "STR:mot → GPi:mot" :
@@ -99,17 +101,17 @@ class Model(object):
                 AssToCog(STR["ass"]["V"], GPi["cog"]["Isyn"], np.ones(4), 0.0),
             "STR:ass → GPi:mot" :
                 AssToMot(STR["ass"]["V"], GPi["mot"]["Isyn"], np.ones(4), 0.0),
-            
+
             "STN:cog → GPi:cog" :
                 OneToAll(STN["cog"]["V"], GPi["cog"]["Isyn"], np.ones(4), 0.0),
             "STN:mot → GPi:mot" :
                 OneToAll(STN["mot"]["V"], GPi["mot"]["Isyn"], np.ones(4), 0.0),
-            
+
             "GPi:cog → THL:cog" :
                 OneToOne(GPi["cog"]["V"], THL["cog"]["Isyn"], np.ones(4), 0.0),
             "GPi:mot → THL:mot" :
                 OneToOne(GPi["mot"]["V"], THL["mot"]["Isyn"], np.ones(4), 0.0),
-            
+
             "THL:cog → CTX:cog" :
                 OneToOne(THL["cog"]["V"], CTX["cog"]["Isyn"], np.ones(4), 0.0),
             "THL:mot → CTX:mot" :
@@ -133,20 +135,20 @@ class Model(object):
         for key, link in self._links.items():
             if key in _["gain"].keys():
                 link.gain = _["gain"][key]
-            
-        
+
+
     def __getitem__(self, key):
         try:
             return self._structures[key]
         except KeyError:
             return self._links[key]
-            
+
 
     def flush(self):
         for group in self._groups:
             group.flush()
 
-                    
+
     def iterate(self, dt):
 
         # Flush all connections
@@ -172,7 +174,7 @@ class Model(object):
         dt = _["time"]["dt"]
         settling = _["time"]["settling"]
         duration = _["time"]["duration"]
-        
+
         # Settling phase (500ms)
         for i in range(int(settling/dt)):
             self.iterate(dt)
@@ -198,7 +200,7 @@ class Model(object):
 
         # Response time
         RT = i * dt
-                        
+
         if decision is False:
             # print("  No decision")
             reward, cue, best = task.process(trial, -1, RT, debug=debug)
@@ -207,7 +209,7 @@ class Model(object):
             # actual_cue = np.argmax(self["CTX"]["cog"]["U"])
             reward, cue, best = task.process(trial, choice, RT, debug=debug)
             # print("  Motor decision: %d, Chosen cue: %d, Actual cue: %d" % (choice,cue, actual_cue))
-                        
+
             # Constants
             Wmin = _["weight"]["min"]
             Wmax = _["weight"]["max"]
@@ -226,7 +228,7 @@ class Model(object):
             # Hebbian learning
             # This is the chosen cue by the model (may be different from the actual cue)
             cue = np.argmax(self["CTX"]["cog"]["U"])
-            
+
             LTP   = _["Hebbian"]["LTP"]
             dw = LTP * self["CTX"]["cog"]["V"][cue]
             W = self["CTX:cog → CTX:ass"].weights
