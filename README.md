@@ -17,24 +17,21 @@ This is a reference implementation for the following models:
 It requires python, numpy, cython and matplotlib:
 
 ```bash
-$ pip install numpy
-$ pip install cython
-$ pip install matplotlib
-$ pip install tqdm
+$ pip install numpy cython maplotlib tqdm
 ```
 
 To compile the model, just type:
 
 ```bash
-$ python setup.py build_ext --inplace
+$ python setup.py develop
 ```
 
 Then you can run a single trial:
 
 ```bash
-$ python single-trial.py
+$ cd experiments/
+$ python single-trial-guthrie.py
 ```
-
 
 Or the full version:
 
