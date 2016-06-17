@@ -39,6 +39,7 @@ for trial in task:
     RT = ...
     reward, best = task.process(trial, choice, RT)
 """
+import os
 import json
 import random
 import numpy as np
@@ -50,10 +51,15 @@ class Task(object):
     def __init__(self, filename="task-guthrie.json"):
         self.index = 0
         self.filename = filename
-        self.parameters = json.load(open(filename))
+        with open(os.path.join(os.path.dirname(__file__), filename)) as f:
+            self.parameters = json.load(f)
+        # create data/ directory if it does not exists.
+        self.datadir = os.path.join(os.path.dirname(__file__), 'data')
+        if not os.path.exists(self.datadir):
+            os.makedirs(self.datadir)
         self.setup()
 
-        
+
     def setup(self):
 
         _ = self.parameters
@@ -61,7 +67,7 @@ class Task(object):
         blocks = []
         for name in _["session"]:
             blocks.append(_[name])
-        
+
         # Get total number of trials
         n = 0
         for block in blocks:
@@ -81,7 +87,7 @@ class Task(object):
 
         # We draw all random probabilities at once (faster)
         self.trials["rnd"] = np.random.uniform(0,1,n)
-        
+
         # Build actual trials
         index = 0
         for block in blocks:
@@ -108,7 +114,7 @@ class Task(object):
                 trial["ass"][c2,m2]   = 1
                 trial["rwd"][...]     = rwd
                 index += 1
-            
+
     def __iter__(self):
         self.setup()
         self.index = -1
@@ -125,8 +131,8 @@ class Task(object):
 
     def __getitem__(self, index):
         return self.trials[index]
-                 
-        
+
+
     def process(self, trial, choice, RT=0.0, debug=False):
         """
         Process a (motor) choice and return the reward and whether this was the
@@ -168,7 +174,7 @@ class Task(object):
             print("  Mean performance: %.3f" % np.array(P).mean())
             R = self.records[:self.index+1]["reward"]
             print("  Mean reward:      %.3f" % np.array(R).mean())
-        
+
         return reward, cue, best
 
 
