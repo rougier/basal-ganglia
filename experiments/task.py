@@ -39,6 +39,7 @@ for trial in task:
     RT = ...
     reward, best = task.process(trial, choice, RT)
 """
+import os
 import json
 import random
 import numpy as np
@@ -53,7 +54,12 @@ class Task(object):
         self.index_stop  = None
 
         self.filename = filename
-        self.parameters = json.load(open(filename))
+        with open(os.path.join(os.path.dirname(__file__), filename)) as f:
+            self.parameters = json.load(f)
+        # create data/ directory if it does not exists.
+        self.datadir = os.path.join(os.path.dirname(__file__), 'data')
+        if not os.path.exists(self.datadir):
+            os.makedirs(self.datadir)
         self.setup()
 
 
@@ -62,7 +68,6 @@ class Task(object):
         self.index_stop  = self.blocks[index][1]
         self.index = self.index_start
         return self
-
 
     def setup(self):
 
