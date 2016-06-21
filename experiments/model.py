@@ -13,6 +13,7 @@ class Model(object):
         self.filename = filename
         with open(os.path.join(os.path.dirname(__file__), filename)) as f:
             self.parameters = json.load(f)
+        np.random.seed()
         self.setup()
 
 
@@ -166,6 +167,8 @@ class Model(object):
 
     def process(self, task, trial, stop=True, debug=False, model=None):
 
+        debug=True
+        
         _ = self.parameters
 
         # Flush all activities
@@ -203,13 +206,18 @@ class Model(object):
 
         if decision is False:
             # print("  No decision")
-            reward, cue, best = task.process(trial, -1, RT, debug=debug, model=model)
+            reward = task.process(trial, cog=-1, mot=-1, RT=RT, model=model)
         else:
-            choice = np.argmax(self["CTX"]["mot"]["U"])
+            mot = np.argmax(self["CTX"]["mot"]["U"])
+            cog = np.argmax(self["CTX"]["cog"]["U"])
+            
             # actual_cue = np.argmax(self["CTX"]["cog"]["U"])
-            reward, cue, best = task.process(trial, choice, RT, debug=debug, model=model)
-            # print("  Motor decision: %d, Chosen cue: %d, Actual cue: %d" % (choice,cue, actual_cue))
+            reward = task.process(trial, cog=cog, mot=mot, RT=RT, model=model)
+            if reward is None:
+                return
 
+            choice = cog
+            
             # Constants
             Wmin = _["weight"]["min"]
             Wmax = _["weight"]["max"]
@@ -218,18 +226,18 @@ class Model(object):
             alpha = _["RL"]["alpha"]
             LTP   = _["RL"]["LTP"]
             LTD   = _["RL"]["LTD"]
-            error = reward - self["value"][cue]
-            self["value"][cue] += error * alpha
+            error = reward - self["value"][choice]
+            self["value"][choice] += error * alpha
             alpha = LTP if error > 0 else LTD
-            dw = error * alpha * self["STR"]["cog"]["V"][cue]
+            dw = error * alpha * self["STR"]["cog"]["V"][choice]
             W = self["CTX:cog → STR:cog"].weights
-            W[cue] += dw * (Wmax-W[cue])*(W[cue]-Wmin)
+            W[choice] += dw * (Wmax-W[choice])*(W[choice]-Wmin)
 
-            # Hebbian learning
-            # This is the chosen cue by the model (may be different from the actual cue)
-            cue = np.argmax(self["CTX"]["cog"]["U"])
+            # # Hebbian learning
+            # # This is the chosen cue by the model (may be different from the actual cue)
+            # cue = np.argmax(self["CTX"]["cog"]["U"])
 
-            LTP   = _["Hebbian"]["LTP"]
-            dw = LTP * self["CTX"]["cog"]["V"][cue]
-            W = self["CTX:cog → CTX:ass"].weights
-            W[cue] += dw * (Wmax-W[cue])*(W[cue]-Wmin)
+            # LTP   = _["Hebbian"]["LTP"]
+            # dw = LTP * self["CTX"]["cog"]["V"][cue]
+            # W = self["CTX:cog → CTX:ass"].weights
+            # W[cue] += dw * (Wmax-W[cue])*(W[cue]-Wmin)
