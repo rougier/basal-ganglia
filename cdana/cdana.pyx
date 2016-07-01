@@ -163,25 +163,25 @@ cdef class Group:
         cdef noise
         cdef ctype * unit
         cdef double max1=0, max2=0
-            
+
         for i in range(len(self._units)):
             unit = & self._units[i]
 
             # Compute white noise
-            noise = self._noise*(rand()/float(RAND_MAX) - 0.5) 
+            noise = self._noise*(rand()/float(RAND_MAX) - 0.5)
 
             # Update membrane potential
             unit.U += dt/self._tau*(-unit.U + unit.Isyn + unit.Iext - self._rest )
-            
+
             # Update firing rate
             unit.V = self._activation.call(unit.U *(1 + noise))
-            
+
             # Store firing rate activity
             self._history[self._history_index,i] = unit.V
 
             # Here we record the max activities to store their difference
             # This is used later to decide if a motor decision has been made
-            if unit.V > max1:   max1 = unit.V
+            if   unit.V > max1: max1, max2 = unit.V, max1
             elif unit.V > max2: max2 = unit.V
 
         self._delta = max1 - max2
@@ -266,6 +266,7 @@ cdef class OneToOne(Connection):
 cdef class OneToAll(Connection):
     def propagate(self):
         cdef int i,j
+        cdef double v
         for i in range(4):
             v = self._source[i] * self._weights[i] * self._gain
             for j in range(4):
@@ -275,6 +276,7 @@ cdef class OneToAll(Connection):
 cdef class AssToMot(Connection):
     def propagate(self):
         cdef int i,j
+        cdef double v
         for i in range(4):
             v = 0
             for j in range(4):
@@ -285,6 +287,7 @@ cdef class AssToMot(Connection):
 cdef class AssToCog(Connection):
     def propagate(self):
         cdef int i,j
+        cdef double v
         for i in range(4):
             v = 0
             for j in range(4):
@@ -317,9 +320,10 @@ cdef class CogToAss(Connection):
 cdef class AllToAll(Connection):
     def propagate(self):
         cdef int i,j
+        cdef double v
         cdef int s_size = self._source.shape[0]
         cdef int t_size = self._target.shape[0]
-        
+
         for i in range(t_size):
             v = 0
             for j in range(s_size):
