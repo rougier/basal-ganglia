@@ -162,7 +162,7 @@ cdef class Group:
         cdef int i
         cdef noise
         cdef ctype * unit
-        cdef double max1=0, max2=0
+        cdef double max1=float('-inf'), max2=float('-inf')
 
         for i in range(len(self._units)):
             unit = & self._units[i]

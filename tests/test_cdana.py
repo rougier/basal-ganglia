@@ -14,6 +14,11 @@ class DanaTests(unittest.TestCase):
         group.evaluate(0.001)
         self.assertTrue(np.allclose(group.delta, 0.9))
 
+        group = cdana.Group(4, activation=cdana.Clamp(-1.0, 1.0))
+        group['U'] = np.array([0.0, -1.0, -2.0, -3.0])
+        group.evaluate(0.001)
+        self.assertTrue(np.allclose(group.delta, 0.9))
+
 
 if __name__ == '__main__':
     unittest.main()
