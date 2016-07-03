@@ -11,7 +11,7 @@ class Model(object):
 
     def __init__(self, filename="default-model.json"):
         self.filename = filename
-        with open(os.path.join(os.path.dirname(__file__), filename)) as f:
+        with open(filename) as f:
             self.parameters = json.load(f)
         self.setup()
 

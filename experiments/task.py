@@ -41,7 +41,6 @@ for trial in task:
 """
 import os
 import json
-import random
 import numpy as np
 
 
@@ -54,12 +53,8 @@ class Task(object):
         self.index_stop  = None
 
         self.filename = filename
-        with open(os.path.join(os.path.dirname(__file__), filename)) as f:
+        with open(filename) as f:
             self.parameters = json.load(f)
-        # create data/ directory if it does not exists.
-        self.datadir = os.path.join(os.path.dirname(__file__), 'data')
-        if not os.path.exists(self.datadir):
-            os.makedirs(self.datadir)
         self.setup()
 
 
@@ -117,13 +112,13 @@ class Task(object):
             rwd = block["rwd"]
 
             for i in range(n):
-                c1 = c2 =  np.searchsorted(P_cue, random.uniform(0,1))
+                c1 = c2 =  np.searchsorted(P_cue, np.random.uniform(0,1))
                 while c1 == c2:
-                    c2 = np.searchsorted(P_cue, random.uniform(0,1))
+                    c2 = np.searchsorted(P_cue, np.random.uniform(0,1))
 
-                m1 = m2 =  np.searchsorted(P_pos, random.uniform(0,1))
+                m1 = m2 =  np.searchsorted(P_pos, np.random.uniform(0,1))
                 while m1 == m2:
-                    m2 = np.searchsorted(P_pos, random.uniform(0,1))
+                    m2 = np.searchsorted(P_pos, np.random.uniform(0,1))
 
                 trial = self.trials[index]
                 trial["cog"][[c1,c2]] = 1
@@ -216,7 +211,7 @@ if __name__ == "__main__":
         best = np.argmax(trial["cog"]*trial["rwd"])
         choice = np.argmax(trial["ass"][best])
         # Random choice
-        # n = len(trial["mot"]) - 1 - random.randint(0,trial["mot"].sum()-1)
+        # n = len(trial["mot"]) - 1 - np.random.randint(0,trial["mot"].sum()-1)
         # choice = np.argsort(trial["mot"])[n]
         # Process choice
         reward, cue, best = task.process(trial, choice, debug=True)

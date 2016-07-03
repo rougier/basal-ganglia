@@ -6,8 +6,7 @@ import io
 import sys
 import json
 import time
-import random
-import os.path
+import os
 import argparse
 import numpy as np
 from tqdm import tqdm
@@ -18,23 +17,33 @@ from model import Model
 
 class Experiment(object):
     def __init__(self, model, task, result, report,
-                       n_session, n_block, seed=None):
-        self.model_file  = model
-        self.task_file   = task
-        self.result_file = result
-        self.report_file = report
+                       n_session, n_block, seed=None, rootdir=None):
+        """Initialize an exeperiment.
+
+        rootdir: root directory for the `model`, `task`, `result` and `report`
+                 filepath. If None, defaults to the directory of the main script.
+        """
+        self.rootdir = rootdir
+        if rootdir is None:
+            from __main__ import __file__ as __mainfile__
+            self.rootdir = os.path.dirname(__mainfile__)
+
+        self.model_file  = os.path.abspath(os.path.join(self.rootdir, model))
+        self.task_file   = os.path.abspath(os.path.join(self.rootdir, task))
+        self.result_file = os.path.abspath(os.path.join(self.rootdir, result))
+        self.report_file = os.path.abspath(os.path.join(self.rootdir, report))
         self.n_session   = n_session
         self.n_block     = n_block
         self.seed        = seed
 
         if self.seed is None:
-            self.seed = random.randint(0,1000)
-        np.random.seed(seed), random.seed(seed)
+            self.seed = np.random.randint(0, 1000)
+        np.random.seed(seed)
 
         self.model = Model(self.model_file)
         self.task  = Task(self.task_file)
         self.n_trial = len(self.task)
-            
+
 
     def run(self, session, desc="", save=True, force=False, parse=True):
 
@@ -48,43 +57,58 @@ class Experiment(object):
         if os.path.exists(self.result_file) and not force:
             print("Reading report (%s)" % self.report_file)
             self.read_report()
-            
+
         print("-"*30)
-        print("Seed:     %d" % self.seed)
-        print("Model:    %s" % self.model_file)
-        print("Task:     %s" % self.task_file)
-        print("Result:   %s" % self.result_file)
-        print("Report:   %s" % self.report_file)
+        print("Seed:     {}".format(self.seed))
+        print("Model:    {}".format(self.model_file))
+        print("Task:     {}".format(self.task_file))
+        print("Result:   {}".format(self.result_file))
+        print("Report:   {}".format(self.report_file))
         n = self.n_session * self.n_block * self.n_trial
-        print("Sessions: %d (%d trials)" % (self.n_session, n))
+        print("Sessions: {} ({} trials)".format(self.n_session, n))
         print("-"*30)
-                
+
         if not os.path.exists(self.result_file) or force:
             index = 0
             records = np.zeros((self.n_session, self.n_block, self.n_trial),
                                dtype=self.task.records.dtype)
-            pool = Pool(4)
-            for result in tqdm(pool.imap_unordered(session, [self,]*self.n_session),
+
+            pool = Pool() # the number of process is set by multiprocessing.cpu_count()
+            # different seed for different session
+            seeds = np.random.randint(0, 1000000000, size=self.n_session)
+            session_args = [(self, session, seed) for seed in seeds]
+
+            for result in tqdm(pool.imap(self.session_init, session_args),
                                total=self.n_session, leave=True, desc=desc, unit="session",):
                 records[index] = result
                 index += 1
             pool.close()
 
             if save:
-                print("Saving results (%s)" % self.result_file)
+                print("Saving results ({})".format(self.result_file))
+                if not os.path.isdir(os.path.dirname(self.result_file)):
+                    os.makedirs(os.path.dirname(self.result_file))
                 np.save(self.result_file, records)
-                print("Writing report (%s)" % self.report_file)
+                if not os.path.isdir(os.path.dirname(self.report_file)):
+                    os.makedirs(os.path.dirname(self.report_file))
+                print("Writing report ({})".format(self.report_file))
                 self.write_report()
                 print("-"*30)
         else:
             print("Loading previous results")
-            print(' → "%s"' % (self.result_file))
+            print(' → "{}"'.format(self.result_file))
             records = np.load(self.result_file)
             print("-"*30)
 
         return records
 
-        
+    @classmethod
+    def session_init(cls, args):
+        """Initialize the random seed of a process and run a session."""
+        experiment, session, seed = args
+        np.random.seed(seed)
+        return session(experiment)
+
     def write_report(self):
         report = { "seed"      : self.seed,
                    "n_session" : self.n_session,

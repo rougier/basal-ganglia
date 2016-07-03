@@ -80,7 +80,6 @@ class DanaEquivalence(unittest.TestCase):
                 #self.assertEqual(deltas[0][k], deltas[1][k])
                 self.assertTrue(np.all(Us[0][k] == Us[1][k]))
 
-        print(total, error, error/total)
 
 if __name__ == '__main__':
     unittest.main()

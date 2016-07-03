@@ -2,15 +2,13 @@
 # Copyright (c) 2016, Nicolas P. Rougier
 # Distributed under the (new) BSD License.
 # -----------------------------------------------------------------------------
-import random
 import numpy as np
 import matplotlib.pyplot as plt
 from task import Task
 from model import Model
 
-seed = random.randint(0,1000)
+seed = np.random.randint(0,1000)
 np.random.seed(seed)
-random.seed(seed)
 
 model = Model("model-guthrie.json")
 task  = Task("task-guthrie.json")

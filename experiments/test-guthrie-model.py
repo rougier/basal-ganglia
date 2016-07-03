@@ -3,7 +3,10 @@
 # Distributed under the (new) BSD License.
 # -----------------------------------------------------------------------------
 import numpy as np
+import random
+
 from experiment import Experiment
+
 
 def session(exp):
     exp.model.setup()
@@ -14,8 +17,8 @@ def session(exp):
 def test_model():
     experiment = Experiment(model  = "model-guthrie.json",
                             task   = "task-guthrie.json",
-                            result = "test-experiment-guthrie.npy",
-                            report = "test-experiment-guthrie.txt",
+                            result = "data/test-experiment-guthrie.npy",
+                            report = "data/test-experiment-guthrie.txt",
                             n_session = 25, n_block = 1, seed = 1)
     records = experiment.run(session, save=False, force=True, parse=False)
     records = np.squeeze(records)
@@ -24,7 +27,6 @@ def test_model():
     std  = np.std(records["best"], axis=0)[-1]
     print("Mean performance: %.2f ± %.2f" % (mean, std))
     print("-"*30)
-
 
     assert mean >= 0.85
 

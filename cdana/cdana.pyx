@@ -8,7 +8,6 @@
 import numpy as np
 cimport numpy as np
 from libc.math cimport exp
-from libc.stdlib cimport rand, srand, RAND_MAX
 
 
 # ---------------------------------------------------------------- Function ---
@@ -44,11 +43,10 @@ cdef class UniformNoise(Function):
     cdef public double amount
 
     def __init__(self, double amount):
-        self.amount = amount
+        self.half_amount = amount/2
 
     cdef double call(self, double x) except *:
-        return x + self.amount*(rand()/float(RAND_MAX) - 0.5)
-
+        return x + np.random.uniform(-self.half_amount, self.half_amount)
 
 # --- Sigmoid ---
 cdef class Sigmoid(Function):
@@ -168,7 +166,7 @@ cdef class Group:
             unit = & self._units[i]
 
             # Compute white noise
-            noise = self._noise*(rand()/float(RAND_MAX) - 0.5)
+            noise = np.random.uniform(-0.5*self._noise, 0.5*self._noise)
 
             # Update membrane potential
             unit.U += dt/self._tau*(-unit.U + unit.Isyn + unit.Iext - self._rest )
