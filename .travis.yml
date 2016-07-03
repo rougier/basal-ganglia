@@ -15,5 +15,4 @@ install:
 
 # command to run tests
 script:
-  - nosetests experiments/test-guthrie-model.py
   - nosetests tests/
