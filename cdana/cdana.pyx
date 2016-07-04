@@ -43,7 +43,7 @@ cdef class UniformNoise(Function):
     cdef public double amount
 
     def __init__(self, double amount):
-        self.half_amount = amount/2
+        self.half_amount = amount/2.0
 
     cdef double call(self, double x) except *:
         return x + np.random.uniform(-self.half_amount, self.half_amount)

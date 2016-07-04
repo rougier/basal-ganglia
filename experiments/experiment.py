@@ -10,7 +10,7 @@ import os
 import argparse
 import numpy as np
 from tqdm import tqdm
-from multiprocessing import Pool
+import multiprocessing
 from task import Task
 from model import Model
 
@@ -73,8 +73,9 @@ class Experiment(object):
             records = np.zeros((self.n_session, self.n_block, self.n_trial),
                                dtype=self.task.records.dtype)
 
-            pool = Pool() # the number of process is set by multiprocessing.cpu_count()
-            # different seed for different session
+            n_workers = multiprocessing.cpu_count() # depends on your hardware
+            pool = multiprocessing.Pool(n_workers)
+            # different seed for different sessions
             seeds = np.random.randint(0, 1000000000, size=self.n_session)
             session_args = [(self, session, seed) for seed in seeds]
 
