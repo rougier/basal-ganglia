@@ -3,7 +3,11 @@
 # Distributed under the (new) BSD License.
 # -----------------------------------------------------------------------------
 import numpy as np
+import os
+
+import dotdot
 from experiment import Experiment
+
 
 def session(exp):
     exp.model.setup()
@@ -12,11 +16,12 @@ def session(exp):
     return exp.task.records
 
 def test_model():
-    experiment = Experiment(model  = "model-guthrie.json",
-                            task   = "task-guthrie.json",
-                            result = "test-experiment-guthrie.npy",
-                            report = "test-experiment-guthrie.txt",
-                            n_session = 25, n_block = 1, seed = 1)
+    experiment = Experiment(model  = "../experiments/model-guthrie.json",
+                            task   = "../experiments/task-guthrie.json",
+                            result = "data/test-experiment-guthrie.npy",
+                            report = "data/test-experiment-guthrie.txt",
+                            n_session = 25, n_block = 1, seed = 1,
+                            rootdir=os.path.dirname(__file__))
     records = experiment.run(session, save=False, force=True, parse=False)
     records = np.squeeze(records)
 
@@ -24,7 +29,6 @@ def test_model():
     std  = np.std(records["best"], axis=0)[-1]
     print("Mean performance: %.2f ± %.2f" % (mean, std))
     print("-"*30)
-
 
     assert mean >= 0.85
 
