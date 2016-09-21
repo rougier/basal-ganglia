@@ -102,12 +102,28 @@ print("-"*30)
 # Graphical results
 # -----------------------------------------------------------------------------
 from figures import *
+
+
+records = records[:,:2,:]
+title = "Protocol 2"
+filename = "data/experiment-topalidou-protocol-2-P-all.pdf"
+figure_P_all(records, [0, 1], title=title, filename=filename)
+
+
 # figure_H_P(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-H-P.pdf")
 # figure_H_RT(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-H-RT.pdf")
 
 #figure_P(records, GPi=[0,1,0], save=False, show=True,
 #         title="Protocol 2", filename="data/experiment-topalidou-protocol-2-P.pdf")
-figure_V(records, GPi=[0,1,0], 
-         title="Protocol 2", filename="data/experiment-topalidou-protocol-2-V.pdf")
+#figure_V(records, GPi=[0,1,0], 
+#         title="Protocol 2", filename="data/experiment-topalidou-protocol-2-V.pdf")
+
+# filename = "data/experiment-topalidou-protocol-2-P-individual.pdf"
+# figure_P_individual(records, GPi=[0, 1, 0],
+#                     title="Protocol 2", filename=filename)
+
+# filename = "data/experiment-topalidou-protocol-2-RT-individual.pdf"
+# figure_RT_individual(records, GPi=[0, 1, 0],
+#                      title="Protocol 2", filename=filename)
 
 # figure_RT(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-RT.pdf")

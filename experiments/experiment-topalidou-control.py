@@ -8,28 +8,28 @@ from experiment import Experiment
 
 def session(exp):
     exp.model.setup()
-    records = np.zeros((exp.n_block, exp.n_trial), dtype=exp.task.records.dtype)
+    records = np.zeros((exp.n_block, exp.n_trial),
+                       dtype=exp.task.records.dtype)
 
     # Day 1 : GPi ON
     for trial in exp.task:
-        exp.model.process(exp.task, trial)
+        exp.model.process(exp.task, trial, model=exp.model)
     records[0] = exp.task.records
 
     # Day 2: GPi ON
     for trial in exp.task:
-        exp.model.process(exp.task, trial)
+        exp.model.process(exp.task, trial, model=exp.model)
     records[1] = exp.task.records
 
     return records
 
 
-experiment = Experiment(model  = "model-topalidou.json",
-                        task   = "task-topalidou.json",
-                        result = "data/experiment-topalidou-control.npy",
-                        report = "data/experiment-topalidou-control.txt",
-                        n_session = 25, n_block = 2, seed = None)
+experiment = Experiment(model="model-topalidou.json",
+                        task="task-topalidou.json",
+                        result="data/experiment-topalidou-control.npy",
+                        report="data/experiment-topalidou-control.txt",
+                        n_session=25, n_block=2, seed=None)
 records = experiment.run(session, "Control")
-
 
 # Save performance (one column per session)
 # -----------------------------------------------------------------------------
@@ -72,8 +72,22 @@ print("-"*30)
 # Graphical results
 # -----------------------------------------------------------------------------
 from figures import *
+
+title = "Control"
+filename = "data/experiment-topalidou-control-P-all.pdf"
+figure_P_all(records, [1, 1], title=title, filename=filename)
+
+
 # figure_H_P(records, [1,1], "Control", "data/experiment-topalidou-control-H-P.pdf")
 # figure_H_RT(records, [1,1], "Control", "data/experiment-topalidou-control-H-RT.pdf")
-figure_P(records, [1,1], "Control", "data/experiment-topalidou-control-P.pdf")
+
+# figure_P(records, [1,1], "Control", "data/experiment-topalidou-control-P.pdf")
+
+# figure_P_individual(records, [1,1], "Control", "data/experiment-topalidou-control-P-individual.pdf")
+
+# figure_RT_individual(records, GPi=[1,1], 
+#                      title="Control",
+# filename="data/experiment-topalidou-control-RT-individual.pdf")
+
 # figure_RT(records, [1,1], "Control", "data/experiment-topalidou-control-RT.pdf")
 
