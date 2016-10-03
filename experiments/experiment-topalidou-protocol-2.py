@@ -26,20 +26,21 @@ def session(exp):
     records[1] = exp.task.records
 
     # Day 1 : GPi OFF
-    exp.model["GPi:cog → THL:cog"].gain = 0
-    exp.model["GPi:mot → THL:mot"].gain = 0
-    for trial in exp.task:
-        exp.model.process(exp.task, trial, model = exp.model)
-    records[2] = exp.task.records
+#    exp.model["GPi:cog → THL:cog"].gain = 0
+#    exp.model["GPi:mot → THL:mot"].gain = 0
+#    for trial in exp.task:
+#        exp.model.process(exp.task, trial, model = exp.model)
+#    records[2] = exp.task.records
         
     return records
 
 
 experiment = Experiment(model = "model-topalidou.json",
                         task = "task-topalidou.json",
-                        result = "data/experiment-topalidou-protocol-2-new.npy",
-                        report = "data/experiment-topalidou-protocol-2-new.txt",
-                        n_session = 25, n_block = 3, seed = 533)
+                        result = "data/experiment-topalidou-protocol-2.npy",
+                        report = "data/experiment-topalidou-protocol-2.txt",
+                        n_session = 12, n_block = 2, seed = None)
+#                        n_session = 12, n_block = 2, seed = 533)
 records = experiment.run(session, "Protocol 2")
 
 
@@ -83,17 +84,17 @@ print("D2 end:   %.3f ± %.3f" % (P.mean(), P.std()))
 P = np.squeeze(records["RT"][:,1])
 print("D2 mean RT: %.3f ± %.3f" % (P.mean(), P.std()))
 
-print()
+# print()
 
-P = np.squeeze(records["best"][:,2,:25])
-P = P.mean(axis=len(P.shape)-1)
-print("D3 start: %.3f ± %.3f" % (P.mean(), P.std()))
-P = np.squeeze(records["best"][:,2,-25:])
-P = P.mean(axis=len(P.shape)-1)
-print("D3 end:   %.3f ± %.3f" % (P.mean(), P.std()))
+# P = np.squeeze(records["best"][:,2,:25])
+# P = P.mean(axis=len(P.shape)-1)
+# print("D3 start: %.3f ± %.3f" % (P.mean(), P.std()))
+# P = np.squeeze(records["best"][:,2,-25:])
+# P = P.mean(axis=len(P.shape)-1)
+# print("D3 end:   %.3f ± %.3f" % (P.mean(), P.std()))
 
-P = np.squeeze(records["RT"][:,2])
-print("D3 mean RT: %.3f ± %.3f" % (P.mean(), P.std()))
+# P = np.squeeze(records["RT"][:,2])
+# print("D3 mean RT: %.3f ± %.3f" % (P.mean(), P.std()))
 
 print("-"*30)
 
