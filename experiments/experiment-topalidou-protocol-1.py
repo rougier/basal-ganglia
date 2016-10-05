@@ -47,31 +47,31 @@ records = experiment.run(session, "Protocol 1")
 # P = np.squeeze(records["RT"][:,1])
 # np.savetxt("data/experiment-topalidou-protocol-1-D2-RT.csv", P.T, fmt="%.4f", delimiter=",")
 
-# # Textual results
-# # ----------------------------------------------------------------------------
-# P = np.squeeze(records["best"][:,0,:25])
-# P = P.mean(axis=len(P.shape)-1)
-# print("D1 start: %.3f ± %.3f" % (P.mean(), P.std()))
-# P = np.squeeze(records["best"][:,0,-25:])
-# P = P.mean(axis=len(P.shape)-1)
-# print("D1 end:   %.3f ± %.3f" % (P.mean(), P.std()))
+# Textual results
+# ----------------------------------------------------------------------------
+P = np.squeeze(records["best"][:,0,:25])
+P = P.mean(axis=len(P.shape)-1)
+print("D1 start: %.3f ± %.3f" % (P.mean(), P.std()))
+P = np.squeeze(records["best"][:,0,-25:])
+P = P.mean(axis=len(P.shape)-1)
+print("D1 end:   %.3f ± %.3f" % (P.mean(), P.std()))
 
-# P = np.squeeze(records["RT"][:,0])
-# print("D1 mean RT: %.3f ± %.3f" % (P.mean(), P.std()))
+P = np.squeeze(records["RT"][:,0])
+print("D1 mean RT: %.3f ± %.3f" % (P.mean(), P.std()))
 
-# print()
+print()
 
-# P = np.squeeze(records["best"][:,1,:25])
-# P = P.mean(axis=len(P.shape)-1)
-# print("D2 start: %.3f ± %.3f" % (P.mean(), P.std()))
-# P = np.squeeze(records["best"][:,1,-25:])
-# P = P.mean(axis=len(P.shape)-1)
-# print("D2 end:   %.3f ± %.3f" % (P.mean(), P.std()))
+P = np.squeeze(records["best"][:,1,:25])
+P = P.mean(axis=len(P.shape)-1)
+print("D2 start: %.3f ± %.3f" % (P.mean(), P.std()))
+P = np.squeeze(records["best"][:,1,-25:])
+P = P.mean(axis=len(P.shape)-1)
+print("D2 end:   %.3f ± %.3f" % (P.mean(), P.std()))
 
-# P = np.squeeze(records["RT"][:,1])
-# print("D2 mean RT: %.3f ± %.3f" % (P.mean(), P.std()))
+P = np.squeeze(records["RT"][:,1])
+print("D2 mean RT: %.3f ± %.3f" % (P.mean(), P.std()))
 
-# print("-"*30)
+print("-"*30)
 
 # # Graphical results
 # # -----------------------------------------------------------------------------
