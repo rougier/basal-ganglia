@@ -62,10 +62,10 @@ records = experiment.run(session, "Protocol 2")
 
 # Textual results
 # -----------------------------------------------------------------------------
-P = np.squeeze(records["best"][:,0,:25])
+P = np.squeeze(records["best"][:,0,:10])
 P = P.mean(axis=len(P.shape)-1)
 print("D1 start: %.3f ± %.3f" % (P.mean(), P.std()))
-P = np.squeeze(records["best"][:,0,-25:])
+P = np.squeeze(records["best"][:,0,-10:])
 P = P.mean(axis=len(P.shape)-1)
 print("D1 end:   %.3f ± %.3f" % (P.mean(), P.std()))
 
@@ -74,10 +74,10 @@ print("D1 mean RT: %.3f ± %.3f" % (P.mean(), P.std()))
 
 print()
 
-P = np.squeeze(records["best"][:,1,:25])
+P = np.squeeze(records["best"][:,1,:10])
 P = P.mean(axis=len(P.shape)-1)
 print("D2 start: %.3f ± %.3f" % (P.mean(), P.std()))
-P = np.squeeze(records["best"][:,1,-25:])
+P = np.squeeze(records["best"][:,1,-10:])
 P = P.mean(axis=len(P.shape)-1)
 print("D2 end:   %.3f ± %.3f" % (P.mean(), P.std()))
 
@@ -105,10 +105,10 @@ print("-"*30)
 from figures import *
 
 
-records = records[:,:2,:]
-title = "Protocol 2"
-filename = "data/experiment-topalidou-protocol-2-P-all.pdf"
-figure_P_all(records, [0, 1], title=title, filename=filename)
+# records = records[:,:2,:]
+# title = "Protocol 2"
+# filename = "data/experiment-topalidou-protocol-2-P-all.pdf"
+# figure_P_all(records, [0, 1], title=title, filename=filename)
 
 
 # figure_H_P(records, [0,1,0], "Protocol 2", "data/experiment-topalidou-protocol-2-H-P.pdf")
